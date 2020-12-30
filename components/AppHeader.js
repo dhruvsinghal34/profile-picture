@@ -4,7 +4,7 @@ class AppHeader extends React.Component{
   render(){
     return(
       <View style= {styles.textContainer}>
-        <Text style={styles.text}>BARTER APP </Text>
+        <Text style={styles.text}>BARTER APP SYSTEM </Text>
       </View>
     );
   }

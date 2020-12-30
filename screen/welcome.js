@@ -19,8 +19,9 @@ export default class Welcome extends React.Component{
 
     userLogin = async (emailId,Password) => {
         firebase.auth().signInWithEmailAndPassword(emailId,Password).then(()=>{
-            return Alert.alert("login in  is succesfully been done ")
+         this.props.navigation.navigate('Donate')
         }).catch((error)=>{
+          var errorCode = error.Code
            var errorMessage=error.message
            return Alert.alert(errorMessage)
         })
@@ -53,8 +54,7 @@ export default class Welcome extends React.Component{
           var errorMessage = error.message;
           return(Alert.alert(errorMessage))
         })
-        }
-    }
+        } }
   
   showModal= async () => {
     return(
@@ -157,9 +157,9 @@ export default class Welcome extends React.Component{
        </ScrollView>
           </View>
          </Modal>
-
-    )
+ )
 }
+
 render(){
     return(
         <View style={styles.container}>
