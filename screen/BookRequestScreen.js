@@ -2,10 +2,10 @@ import * as React from 'react'
 import { StyleSheet, Text, TextInput, View,TouchableOpacity,Alert, KeyboardAvoidingView} from 'react-native';
 import db from '../config';
 import firebase  from 'firebase';
-import AppHeader from './components/AppHeader'
+import AppHeader from '../components/AppHeader'
 
 export default class BookRequestScreen extends React.Component {
-    construction (){
+    constructor (){
         super()
         this.state={
             userId: firebase.auth().currentUser.email,
