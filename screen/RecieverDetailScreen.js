@@ -1,6 +1,8 @@
-import react from 'react'
+import React from 'react'
 import {View,Text} from 'react-native'
 import{Card,Header,Icon} from 'react-native-elements'
+import { TouchableNativeFeedback } from 'react-native-gesture-handler'
+import firebase from 'firebase'
 import db from '../config'
 export default class RecieverDetailScreen extends  React.Component{
     constructor(){
@@ -39,6 +41,22 @@ export default class RecieverDetailScreen extends  React.Component{
             request_status:"Donaor Interseted "
         })
     }
+    addNotification =()=>{
+      var message = this.state.userName + "has shown interset in donationg book" 
+      db.collection("all_notification").add({
+        "trageted_user_id":this.state.recieverId,
+        "donor_id":this.state.userId,
+        "request_Id":this.state.requestId ,
+        "book_name":this.state.bookName,
+        "date": firebase.firestore.FieldValue.serverTimestamp(),
+        "notification_status":"unread",
+        "message":message
+      })
+    }
+    componentDidMount(){
+      this.getRecieverDetails()
+    }
+
     render(){
         return(
             <View style={styles.container}>
@@ -86,6 +104,7 @@ export default class RecieverDetailScreen extends  React.Component{
                       style={styles.button}
                       onPress={()=>{
                         this.updateBookStatus()
+                        this.addNotification()
                         this.props.navigation.navigate('MyBarters')
                       }}>
                     <Text>I want to Donate</Text>

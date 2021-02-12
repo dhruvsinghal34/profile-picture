@@ -1,7 +1,8 @@
-import react from 'react'
+import React from 'react'
 import{View,Text,TouchableOpacity,ScrollView,FlatList,StyleSheet} from 'react'
 import{Card,Header,Icon} from 'react-native-elements'
 import firebase from 'firebase'
+import db from '../config';
 export default class MyBartersScreen extends React.Component{
     static navigationOptions = {header:null};
 
@@ -21,6 +22,45 @@ export default class MyBartersScreen extends React.Component{
             })
         })
     }
+    sendBook=(bookDetails)=>{
+     if (bookDetails.request_status === "Book Sent"){
+         var requestStatus ="donor interested"
+          db.collection("all_notification").doc(bookDetails.doc_id).update({
+            "request_status":"Donor interseted "
+          })
+          this.sendNotification(bookDetails,requestStatus)
+     }
+     else{
+      var requestStatus = "Book Sent"
+      db.collection("all_barters").doc(bookDetails.doc_id).update({
+        "request_status":"Book Sent "
+      })
+      this.sendNotification(bookDetails,requestStatus)
+     }
+    }
+    sendNotification=(bookDetails,requestStatus)=>{
+      var requestId = bookDetails.request_id
+      var donorId = bookDetaisl.donor_id
+      db.collection("all_notification")
+      .where("request_id","==",requestId)
+      .where("donor_id","==",donorId)
+      .get()
+      .then((snapshot)=>{
+    snapshot.forEach((doc)=>{
+    var message =""
+    if(requestStatus === "Book Sent"){
+      message = this.state.donorName + "send you book"
+    }else{
+      message = this.state.donorName + "has shown interset for donating book"
+    }
+    db.collection("all_notification").doc(doc.id).update({
+      "message":message,
+      "notification_status":"unread",
+      "date": firebase.firestore.FieldValue.serverTimestamp(),
+    })
+    })
+      })
+    }
     keyExtractor = (item, index) => index.toString()
 
    renderItem = ( {item, i} ) =>(
@@ -31,9 +71,21 @@ export default class MyBartersScreen extends React.Component{
        leftElement={<Icon name="book" type="font-awesome" color ='#696969'/>}
        titleStyle={{ color: 'black', fontWeight: 'bold' }}
        rightElement={
-           <TouchableOpacity style={styles.button}>
-             <Text style={{color:'#ffff'}}>Send Book</Text>
+           <TouchableOpacity
+            style={
+              styles.button,
+              {
+                background : item.request_status === "book sent " ? "green" : "ff5722"
+              }}
+              onPress={()=>{
+                this.sendBook(item)
+              }}
+            >
+             <Text style={{color:'#ffff'}}>{
+               item.request_status === "Book Sent" ? "Book Sent" :"Send Book"
+             }</Text>
            </TouchableOpacity>
+         
          }
        bottomDivider
      />
@@ -52,7 +104,7 @@ export default class MyBartersScreen extends React.Component{
             <MyHeader navigation={this.props.navigation} title="My Barters"/>
             <View style={{flex:1}}>
               {
-                this.state.allDonations.length === 0
+                this.state. allBarters.length === 0
                 ?(
                   <View style={styles.subtitle}>
                     <Text style={{ fontSize: 20}}>List of all book Barters</Text>
