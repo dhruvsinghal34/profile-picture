@@ -35,13 +35,15 @@ export default class Welcome extends React.Component{
         }
         else{
             firebase.auth().createUserWithEmailAndPassword(emailId,Password).then(()=>{
-             db.collection("users").add({firstName:this.state.firstName,
+             db.collection("users").add({
+            firstName:this.state.firstName,
             lastName:this.state.lastName,
             EmailAdress:this.state. EmailID,
             Password:this.state.Password,
             confirmPassword:this.state.confirmPassword,
             HomeAddress:this.state.Address,
-            PhoneNumber:this.state.contact
+            PhoneNumber:this.state.contact,
+            isBookRequestActive : false
         })
         return(Alert.alert("user is added succesfully",'',[
           {text:"OK",onPress:()=>{
